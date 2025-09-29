@@ -44,7 +44,7 @@ jobs:
 
       - name: Build AUR package
         run: |
-          su - builder -c "cd $GITHUB_WORKSPACE && ./scripts/build-aur.sh \"\${{ inputs.package_name }}\" \"\${{ inputs.version }}\""
+          su - builder -c "cd $GITHUB_WORKSPACE && ./scripts/build-aur.sh \"${{ inputs.package_name }}\" \"${{ inputs.version }}\""
           echo "Current directory after build: $(pwd)"
           echo "Files in workspace: $(ls -la $GITHUB_WORKSPACE/*.tar.gz || echo 'No tar.gz files')"
 
