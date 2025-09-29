@@ -30,9 +30,8 @@ cd ../..
 
 # Collect PKG files
 pkg_dir="${temp_dir}"
-pkg_files=("${pkg_dir}"/*.pkg.tar.zst)
 
-if [[ ${#pkg_files[@]} -eq 0 ]]; then
+if ! ls "${pkg_dir}"/*.pkg.tar.zst >/dev/null 2>&1; then
   echo "Error: No .pkg.tar.zst files found after build."
   exit 1
 fi
@@ -40,7 +39,7 @@ fi
 output_file="${package_name}-${version}.tar.gz"
 echo "Packaging into ${output_file}..."
 
-tar -czf "${output_file}" -C "${pkg_dir}" *.pkg.tar.zst
+tar -czf "${output_file}" -C "${pkg_dir}" '*.pkg.tar.zst'
 
 # Cleanup
 rm -rf "${temp_dir}"
