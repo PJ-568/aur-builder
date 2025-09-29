@@ -1,0 +1,32 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build outputs
+*.tar.gz
+*.pkg.tar.zst
+*.pkg.tar
+
+# Temporary directories
+temp_aur/
+temp/
+build/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# AGENTS.md (internal)
+AGENTS.md
+
+# Other
+*.swp
+*.swo

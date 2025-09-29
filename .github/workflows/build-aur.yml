@@ -1,0 +1,56 @@
+name: Build AUR Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: "AUR package name (e.g., yay)"
+        required: true
+        type: string
+        default: ""
+      version:
+        description: "Version or git tag/branch (optional, defaults to latest)"
+        required: false
+        type: string
+        default: "latest"
+      arch:
+        description: "Target architecture (optional, defaults to x86_64)"
+        required: false
+        type: string
+        default: "x86_64"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Update package database and install dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm base-devel git
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: chmod +x scripts/build-aur.sh
+
+      - name: Build AUR package
+        run: |
+          ./scripts/build-aur.sh "${{ inputs.package_name }}" "${{ inputs.version }}"
+
+      - name: Upload built package as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aur-package-${{ inputs.package_name }}-${{ inputs.version }}
+          path: ./*.tar.gz
+          retention-days: 30
+
+  package:
+    needs: build
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify on failure
+        if: failure()
+        run: echo "Build failed for ${{ inputs.package_name }}"
