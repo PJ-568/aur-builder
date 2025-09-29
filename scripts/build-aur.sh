@@ -26,20 +26,32 @@ echo "Building package with makepkg..."
 
 makepkg -si --noconfirm
 
+# Debug: List generated package files
+echo "Debug: Current directory after makepkg: $(pwd)"
+echo "Debug: Contents of ${temp_dir}:"
+ls -la "${temp_dir}"/*.pkg.tar.* 2>/dev/null || echo "No .pkg.tar.* files found"
+echo "Debug: pkg_dir will be: ${pkg_dir}"
+
 cd ../..
 
 # Collect PKG files
 pkg_dir="${temp_dir}"
 
-if ! ls "${pkg_dir}"/*.pkg.tar.zst >/dev/null 2>&1; then
-  echo "Error: No .pkg.tar.zst files found after build."
+# Debug: Confirm paths before tar
+echo "Debug: Current directory before tar: $(pwd)"
+echo "Debug: pkg_dir path: ${pkg_dir}"
+echo "Debug: Files in pkg_dir before tar:"
+ls -la "${pkg_dir}"/*.pkg.tar.* 2>/dev/null || echo "No .pkg.tar.* files in ${pkg_dir}"
+
+if ! ls "${pkg_dir}"/*.pkg.tar.* >/dev/null 2>&1; then
+  echo "Error: No .pkg.tar.* files found after build."
   exit 1
 fi
 
 output_file="${package_name}-${version}.tar.gz"
 echo "Packaging into ${output_file}..."
 
-tar -czf "${output_file}" -C "${pkg_dir}" '*.pkg.tar.zst'
+tar -czf "${output_file}" -C "${pkg_dir}" '*.pkg.tar.*'
 
 # Cleanup
 rm -rf "${temp_dir}"
