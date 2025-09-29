@@ -28,9 +28,10 @@ makepkg -si --noconfirm
 
 # Debug: List generated package files
 echo "Debug: Current directory after makepkg: $(pwd)"
-echo "Debug: Contents of ${temp_dir}:"
+echo "Debug: Full contents of current dir (${temp_dir}):"
+ls -la "${temp_dir}"
+echo "Debug: Package files in ${temp_dir}:"
 ls -la "${temp_dir}"/*.pkg.tar.* 2>/dev/null || echo "No .pkg.tar.* files found"
-echo "Debug: pkg_dir will be: ${pkg_dir}"
 
 cd ../..
 
@@ -40,7 +41,9 @@ pkg_dir="${temp_dir}"
 # Debug: Confirm paths before tar
 echo "Debug: Current directory before tar: $(pwd)"
 echo "Debug: pkg_dir path: ${pkg_dir}"
-echo "Debug: Files in pkg_dir before tar:"
+echo "Debug: Full contents of pkg_dir (${pkg_dir}):"
+ls -la "${pkg_dir}"
+echo "Debug: Package files in pkg_dir before tar:"
 ls -la "${pkg_dir}"/*.pkg.tar.* 2>/dev/null || echo "No .pkg.tar.* files in ${pkg_dir}"
 
 if ! ls "${pkg_dir}"/*.pkg.tar.* >/dev/null 2>&1; then
