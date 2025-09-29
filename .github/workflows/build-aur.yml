@@ -27,17 +27,23 @@ jobs:
       - name: Update package database and install dependencies
         run: |
           pacman -Syu --noconfirm
-          pacman -S --noconfirm base-devel git
+          pacman -S --noconfirm base-devel git sudo
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Create non-root builder user
+        run: |
+          useradd -m -s /bin/bash builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
+          chown -R builder:builder /github/workspace
 
       - name: Make script executable
         run: chmod +x scripts/build-aur.sh
 
       - name: Build AUR package
         run: |
-          ./scripts/build-aur.sh "${{ inputs.package_name }}" "${{ inputs.version }}"
+          su - builder -c "./scripts/build-aur.sh \"\${{ inputs.package_name }}\" \"\${{ inputs.version }}\""
 
       - name: Upload built package as artifact
         uses: actions/upload-artifact@v4
