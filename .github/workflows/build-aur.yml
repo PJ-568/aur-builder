@@ -36,14 +36,17 @@ jobs:
         run: |
           useradd -m -s /bin/bash builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
-          chown -R builder:builder /github/workspace
+          chown -R builder:builder $GITHUB_WORKSPACE
+          echo "Work directory: $GITHUB_WORKSPACE"
 
       - name: Make script executable
         run: chmod +x scripts/build-aur.sh
 
       - name: Build AUR package
         run: |
-          su - builder -c "./scripts/build-aur.sh \"\${{ inputs.package_name }}\" \"\${{ inputs.version }}\""
+          su - builder -c "cd $GITHUB_WORKSPACE && ./scripts/build-aur.sh \"\${{ inputs.package_name }}\" \"\${{ inputs.version }}\""
+          echo "Current directory after build: $(pwd)"
+          echo "Files in workspace: $(ls -la $GITHUB_WORKSPACE/*.tar.gz || echo 'No tar.gz files')"
 
       - name: Upload built package as artifact
         uses: actions/upload-artifact@v4
