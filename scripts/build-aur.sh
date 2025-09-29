@@ -26,37 +26,20 @@ echo "Building package with makepkg..."
 
 makepkg -si --noconfirm
 
-# Debug: List generated package files
-echo "Debug: Current directory after makepkg: $(pwd)"
-echo "Debug: Full contents of current dir ($(pwd)):"
-ls -la .
-echo "Debug: Package files in current dir:"
-ls -la ./*.pkg.tar.* 2>/dev/null || echo "No .pkg.tar.* files found"
-
-cd ../..
-
-# Collect PKG files
-pkg_dir="${temp_dir}"
-
-# Debug: Confirm paths before tar
-echo "Debug: Current directory before tar: $(pwd)"
-echo "Debug: pkg_dir path: ${pkg_dir}"
-echo "Debug: Full contents of pkg_dir (${pkg_dir}):"
-ls -la "${pkg_dir}"
-echo "Debug: Package files in pkg_dir before tar:"
-ls -la "${pkg_dir}"/*.pkg.tar.* 2>/dev/null || echo "No .pkg.tar.* files in ${pkg_dir}"
-
-if ! ls "${pkg_dir}"/*.pkg.tar.* >/dev/null 2>&1; then
+# Collect PKG files in current dir (temp_dir)
+if ! ls ./*.pkg.tar.* >/dev/null 2>&1; then
   echo "Error: No .pkg.tar.* files found after build."
   exit 1
 fi
 
-output_file="${package_name}-${version}.tar.gz"
+output_file="../../${package_name}-${version}.tar.gz"
 echo "Packaging into ${output_file}..."
 
-tar -czf "${output_file}" -C "${pkg_dir}" *.pkg.tar.*
+tar -czf "${output_file}" *.pkg.tar.*
+
+cd ../..
 
 # Cleanup
 rm -rf "${temp_dir}"
 
-echo "Successfully built ${output_file}"
+echo "Successfully built ${package_name}-${version}.tar.gz"
