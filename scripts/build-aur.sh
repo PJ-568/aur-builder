@@ -54,7 +54,7 @@ fi
 output_file="${package_name}-${version}.tar.gz"
 echo "Packaging into ${output_file}..."
 
-tar -czf "${output_file}" -C "${pkg_dir}" '*.pkg.tar.*'
+tar -czf "${output_file}" -C "${pkg_dir}" *.pkg.tar.*
 
 # Cleanup
 rm -rf "${temp_dir}"
