@@ -28,10 +28,10 @@ makepkg -si --noconfirm
 
 # Debug: List generated package files
 echo "Debug: Current directory after makepkg: $(pwd)"
-echo "Debug: Full contents of current dir (${temp_dir}):"
-ls -la "${temp_dir}"
-echo "Debug: Package files in ${temp_dir}:"
-ls -la "${temp_dir}"/*.pkg.tar.* 2>/dev/null || echo "No .pkg.tar.* files found"
+echo "Debug: Full contents of current dir ($(pwd)):"
+ls -la .
+echo "Debug: Package files in current dir:"
+ls -la ./*.pkg.tar.* 2>/dev/null || echo "No .pkg.tar.* files found"
 
 cd ../..
 
